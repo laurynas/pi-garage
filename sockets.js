@@ -1,7 +1,5 @@
 module.exports = function(app, io) {
-  var ds18x20 = require('ds18x20');
   var gpio = require('pi-gpio');
-  var sensorId = ds18x20.list()[0];
   var garageDoorPin = app.get('garage_door_pin');
   var garageDoorButtonPin = app.get('garage_door_button_pin');
 
@@ -22,12 +20,6 @@ module.exports = function(app, io) {
 
     emitStatus(io);
     console.log(status);
-  };
-
-  function readTemperature() {
-    ds18x20.get(sensorId, function(err, temperature) {
-      updateStatus('temperature', temperature);
-    });
   };
 
   function readGarageDoorStatus() {
@@ -52,10 +44,11 @@ module.exports = function(app, io) {
 
   gpio.open(garageDoorPin, 'input');
 
-  setInterval(readTemperature, 60 * 1000);
   setInterval(readGarageDoorStatus, 300);
 
-  readTemperature();
+  require('./libraries/temperature').init(function(temperature) {
+    updateStatus('temperature', temperature);
+  });
 
   io.on('connection', function(socket) {
     console.log('socket connected');
