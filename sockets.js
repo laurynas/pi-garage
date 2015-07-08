@@ -46,7 +46,7 @@ module.exports = function(app, io) {
 
   setInterval(readGarageDoorStatus, 300);
 
-  require('./libraries/temperature').init(function(temperature) {
+  require('./libraries/temperature_sensor')(function(temperature) {
     updateStatus('temperature', temperature);
   });
 
