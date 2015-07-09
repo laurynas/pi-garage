@@ -1,11 +1,7 @@
 module.exports = function(app, io) {
-  var gpio = require('pi-gpio');
-  var garageDoorPin = app.get('garage_door_pin');
-  var garageDoorButtonPin = app.get('garage_door_button_pin');
-
   var status = {
     temperature: null,
-    garageDoor: null
+    garageGate: null
   };
 
   function emitStatus(socket) {
@@ -13,41 +9,21 @@ module.exports = function(app, io) {
   };
 
   function updateStatus(key, value) {
-    if (status[key] == value)
-      return;
-
     status[key] = value;
-
     emitStatus(io);
     console.log(status);
   };
 
-  function readGarageDoorStatus() {
-    gpio.read(garageDoorPin, function(err, value) {
-      updateStatus('garageDoor', value);
-    });
-  }
-
-  function clickGarageDoorButton() {
-    console.log('Click garage door');
-
-    gpio.open(garageDoorButtonPin, function(err) {
-      gpio.write(garageDoorButtonPin, 1, function() {
-        setTimeout(function() {
-          gpio.write(garageDoorButtonPin, 0, function() {
-            gpio.close(garageDoorButtonPin);
-          });
-        }, 100);
-      });
-    });
-  }
-
-  gpio.open(garageDoorPin, 'input');
-
-  setInterval(readGarageDoorStatus, 300);
-
   require('./libraries/temperature_sensor')(function(temperature) {
     updateStatus('temperature', temperature);
+  });
+
+  var garageGate = require('./libraries/garage_gate')({
+    pin: app.get('garage_gate_pin'),
+    buttonPin: app.get('garage_gate_button_pin'),
+    onChange: function(value) {
+      updateStatus('garageGate', value);
+    }
   });
 
   io.on('connection', function(socket) {
@@ -58,6 +34,9 @@ module.exports = function(app, io) {
       console.log('socket disconnected');
     });
 
-    socket.on('garage_door_button_click', clickGarageDoorButton);
+    socket.on('garage_gate_button_click', function() {
+      console.log('garage gate button clicked');
+      garageGate.click();
+    });
   });
 };
