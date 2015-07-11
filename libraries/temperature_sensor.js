@@ -10,7 +10,11 @@ function TemperatureSensor(callback) {
   this.onChange = callback;
   this.update();
 
-  setInterval(this.update, 60 * 1000);
+  var that = this;
+
+  setInterval(function() {
+    that.update();
+  }, 60 * 1000);
 };
 
 TemperatureSensor.prototype.update = function() {
