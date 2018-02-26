@@ -1,4 +1,4 @@
-var gpio = require('pi-gpio');
+var Gpio = require('onoff').Gpio;
 var extend = require('util')._extend;
 
 function GarageGate(options) {
@@ -7,14 +7,15 @@ function GarageGate(options) {
 
   this.options = extend({
     onChange: function(status) {},
-    pin: 16,
-    buttonPin: 18,
+    pin: 23,
+    buttonPin: 24,
     interval: 300
   }, options || {});
 
   this.status = null;
 
-  gpio.open(this.options.pin, 'input');
+  this.sensor = new Gpio(this.options.pin, 'in');
+  this.button = new Gpio(this.options.buttonPin, 'out');
 
   var that = this;
 
@@ -26,26 +27,22 @@ function GarageGate(options) {
 GarageGate.prototype.update = function() {
   var that = this;
 
-  gpio.read(that.options.pin, function(err, value) {
+  this.sensor.read(function(err, value) {
     if (that.status == value)
       return;
 
     that.status = value;
-    that.options.onChange(that.status);
+    that.options.onChange(value);
   });
 };
 
 GarageGate.prototype.click = function() {
-  var pin = this.options.buttonPin;
+  var button = this.button;
 
-  gpio.open(pin, function(err) {
-    gpio.write(pin, 1, function() {
-      setTimeout(function() {
-        gpio.write(pin, 0, function() {
-          gpio.close(pin);
-        });
-      }, 100);
-    });
+  button.write(1, function() {
+    setTimeout(function() {
+      button.writeSync(0);
+    }, 100);
   });
 };
 
