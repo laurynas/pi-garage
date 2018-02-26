@@ -2,7 +2,7 @@ var sensors = require('ds1820-temp');
 
 function TemperatureSensor(callback) {
   if (!(this instanceof TemperatureSensor)) {
-    return new TemperatureSensor();
+    return new TemperatureSensor(callback);
   }
 
   this.temperature = null;
@@ -20,7 +20,8 @@ TemperatureSensor.prototype.update = function() {
   var that = this;
 
   sensors.readDevices(function(err, devices) {
-    var value = devices[0].value;
+    var device = devices[0];
+    value = parseFloat(device.value).toFixed(1);
 
     if (that.temperature == value)
       return;
