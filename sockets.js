@@ -1,12 +1,10 @@
 module.exports = function(app, io) {
   const state = {};
 
-  const emitState = (socket) => socket.emit('state', state);
-
   const updateState = (key, value) => {
     state[key] = value;
-    emitState(io);
     console.log(state);
+    io.emit('state', state);
   };
 
   app.on('devices:garage-temperature', temperature => updateState('garageTemperature', temperature));
@@ -14,7 +12,7 @@ module.exports = function(app, io) {
 
   io.on('connection', function(socket) {
     console.log('socket connected');
-    emitState(socket);
+    socket.emit('state', state);
 
     socket.on('disconnect', function() {
       console.log('socket disconnected');
