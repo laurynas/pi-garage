@@ -14,11 +14,11 @@ module.exports = function(app, io) {
     console.log(status);
   };
 
-  require('./libraries/temperature_sensor')(function(temperature) {
+  require('./devices/temperature_sensor')(function(temperature) {
     updateStatus('garageTemperature', temperature);
   });
 
-  var garageGate = require('./libraries/garage_gate')({
+  var garageGate = require('./devices/garage_gate')({
     pin: app.get('garage_gate_pin'),
     buttonPin: app.get('garage_gate_button_pin'),
     onChange: function(value) {
