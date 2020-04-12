@@ -15,7 +15,7 @@ module.exports = function(app, io) {
   };
 
   require('./libraries/temperature_sensor')(function(temperature) {
-    updateStatus('temperature', temperature);
+    updateStatus('garageTemperature', temperature);
   });
 
   var garageGate = require('./libraries/garage_gate')({

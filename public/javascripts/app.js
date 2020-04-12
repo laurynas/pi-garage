@@ -2,7 +2,7 @@ $(function() {
   var socket = io();
 
   socket.on('status', function(status) {
-    $('#temperature').html(status.temperature);
+    $('#temperature').html(status.garageTemperature);
 
     if (status.garageGate) {
       $('#garage-gate').removeClass('btn-warning').addClass('btn-success');
