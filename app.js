@@ -9,7 +9,6 @@ var routes = require('./routes/index');
 var app = express();
 
 require('./config')(app);
-require('./devices')(app);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

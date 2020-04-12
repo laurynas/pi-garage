@@ -14,6 +14,7 @@
     "hbs": "^4.1.1",
     "morgan": "~1.10.0",
     "onoff": "^2.0.0",
+    "prom-client": "^12.0.0",
     "serve-favicon": "^2.5.0",
     "socket.io": "^2.3.0"
   }

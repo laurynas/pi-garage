@@ -6,10 +6,11 @@ var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 var server = http.createServer(app);
-
 var io = require('socket.io')(server);
 
+require('./prometheus')(app, server);
 require('./sockets')(app, io);
+require('./devices')(app);
 
 server.listen(port);
 server.on('error', onError);
