@@ -8,7 +8,6 @@ app.set('port', port);
 var server = http.createServer(app);
 var io = require('socket.io')(server);
 
-require('./prometheus')(app, server);
 require('./sockets')(app, io);
 require('./devices')(app);
 

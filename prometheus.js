@@ -3,8 +3,8 @@ const register = PromClient.register;
 
 PromClient.collectDefaultMetrics();
 
-module.exports = (app, server) => {
-  server.get('/metrics', (req, res) => {
+module.exports = (app) => {
+  app.get('/metrics', (req, res) => {
     res.set('Content-Type', register.contentType);
     res.end(register.metrics());
   });
