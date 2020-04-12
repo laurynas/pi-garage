@@ -1,22 +1,18 @@
 module.exports = function(app, io) {
-  var status = {
-    temperature: null,
-    garageGate: null
+  var state = {};
+
+  function emitState(socket) {
+    socket.emit('state', state);
   };
 
-  function emitStatus(socket) {
-    socket.emit('status', status);
+  function updateState(key, value) {
+    state[key] = value;
+    emitState(io);
+    console.log(state);
   };
 
-  function updateStatus(key, value) {
-    status[key] = value;
-    emitStatus(io);
-    console.log(status);
-  };
+  app.on('devices:garage-temperature', temperature => updateState(temperature));
 
-  require('./devices/temperature_sensor')(function(temperature) {
-    updateStatus('garageTemperature', temperature);
-  });
 
   var garageGate = require('./devices/garage_gate')({
     pin: app.get('garage_gate_pin'),
@@ -28,7 +24,7 @@ module.exports = function(app, io) {
 
   io.on('connection', function(socket) {
     console.log('socket connected');
-    emitStatus(socket);
+    emitState(socket);
 
     socket.on('disconnect', function() {
       console.log('socket disconnected');

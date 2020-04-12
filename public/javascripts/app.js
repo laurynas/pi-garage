@@ -1,10 +1,10 @@
 $(function() {
   var socket = io();
 
-  socket.on('status', function(status) {
-    $('#temperature').html(status.garageTemperature);
+  socket.on('state', function(state) {
+    $('#temperature').html(state.garageTemperature);
 
-    if (status.garageGate) {
+    if (state.garageGate) {
       $('#garage-gate').removeClass('btn-warning').addClass('btn-success');
       $('#garage-gate .status').html('closed');
     } else {
