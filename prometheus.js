@@ -1,11 +1,18 @@
-const PromClient = require('prom-client');
-const register = PromClient.register;
+const client = require('prom-client');
 
-PromClient.collectDefaultMetrics();
+client.collectDefaultMetrics();
+
+const garageTemperatureGauge = new client.Gauge({ name: 'device_garage_temperature', help: 'Garage temperature' });
+const garageGateGauge = new client.Gauge({ name: 'device_garage_gate', help: 'Garage gate state' });
+const garageGateCounter = new client.Counter({ name: 'device_garage_gate_counter', help: 'Garage gate button clicks counter' });
 
 module.exports = (app) => {
+  app.on('devices:garage-temperature', value => garageTemperatureGauge.set(value));
+  app.on('devices:garage-gate', value => garageGateGauge.set(value));
+  app.on('devices:garage-gate:click', () => garageGateCounter.inc());
+
   app.get('/metrics', (req, res) => {
-    res.set('Content-Type', register.contentType);
-    res.end(register.metrics());
+    res.set('Content-Type', client.register.contentType);
+    res.end(client.register.metrics());
   });
 };
