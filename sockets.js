@@ -13,12 +13,11 @@ module.exports = function(app, io) {
 
   app.on('devices:garage-temperature', temperature => updateState(temperature));
 
-
   var garageGate = require('./devices/garage_gate')({
     pin: app.get('garage_gate_pin'),
     buttonPin: app.get('garage_gate_button_pin'),
     onChange: function(value) {
-      updateStatus('garageGate', value);
+      updateState('garageGate', value);
     }
   });
 
