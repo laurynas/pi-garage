@@ -51,6 +51,21 @@ body {
   font-size: 21px;
 }
 
+.gauges {
+  padding-bottom: 50px;
+}
+
+.gauge {
+  font-size: 45px;
+  font-weight: 550;
+}
+
+.gauge .title {
+  font-size: 20px;
+  font-weight: normal;
+  color: #777;
+}
+
 /* Responsive: Portrait tablets and up */
 @media screen and (min-width: 768px) {
   /* Remove the padding we set earlier */

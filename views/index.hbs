@@ -1,6 +1,18 @@
 <div class="jumbotron">
-  <h1><span id="temperature"></span>&deg;C</h1>
-  <p class="lead"></p>
+  <div class="row gauges">
+    <div class="col-md-4 gauge">
+      <span id="salonTemperature"></span>&deg;C
+      <div class="title">House</div>
+    </div>
+    <div class="col-md-4 gauge">
+      <span id="outsideTemperature"></span>&deg;C
+      <div class="title">Outside</div>
+    </div>
+    <div class="col-md-4 gauge">
+      <span id="garageTemperature"></span>&deg;C
+      <div class="title">Garage</div>
+    </div>
+  </div>
   <p>
     <button id="garage-gate" type="button" class="btn btn-lg">
       <span class="glyphicon glyphicon-star" aria-hidden="true"></span> 
