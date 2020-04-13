@@ -2,12 +2,10 @@ const sensors = require('ds1820-temp');
 
 let temperature = null;
 
-const TemperatureSensor = (callback) => {
+const TemperatureSensor = (deviceId, callback) => {
   const update = () => {
-    sensors.readDevices((_err, devices) => {
-      const device = devices[0];
-
-      console.log(devices);
+    sensors.readDevice(deviceId, (_err, device) => {
+      console.log(device);
 
       value = parseFloat(parseFloat(device.value).toFixed(1));
 
@@ -20,6 +18,7 @@ const TemperatureSensor = (callback) => {
     });
   };
 
+  update();
   setInterval(() => update(), 60 * 1000);
 };
 
