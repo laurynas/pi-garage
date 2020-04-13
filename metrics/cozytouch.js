@@ -25,7 +25,7 @@ module.exports = (client, app) => {
       uiClass: device.uiClass,
       oid: device.oid,
       placeOID: device.placeOID,
-      url: device.url,
+      url: device.URL,
     }
 
     let value = state.value;
