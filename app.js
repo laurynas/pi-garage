@@ -6,8 +6,6 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
-require('./config')(app);
-
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 

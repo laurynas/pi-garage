@@ -1,3 +1,5 @@
+const config = require('./config');
+
 const GarageTemperatureSensor = require('./devices/temperature_sensor');
 const CPUTemperatureSensor = require('./devices/cpu_temperature_sensor');
 const GarageGate = require('./devices/garage_gate');
@@ -8,23 +10,27 @@ module.exports = (app) => {
     temperature => app.emit('devices:cpu-temperature', temperature)
   );
 
-  GarageTemperatureSensor(
-    app.get('config.garage_temperature_sensor'),
-    temperature => app.emit('devices:garage-temperature', temperature),
-  );
+  if (config.garage_temperature_sensor) {
+    GarageTemperatureSensor(
+      config.garage_temperature_sensor,
+      temperature => app.emit('devices:garage-temperature', temperature),
+    );
+  }
 
-  const garageGate = GarageGate({
-    pin: app.get('config.garage_gate_pin'),
-    buttonPin: app.get('config.garage_gate_button_pin'),
-    onChange: value => app.emit('devices:garage-gate', value),
-  });
+  if (config.garage_gate_pin) {
+    const garageGate = GarageGate({
+      pin: config.garage_gate_pin,
+      buttonPin: config.garage_gate_button_pin,
+      onChange: value => app.emit('devices:garage-gate', value),
+    });
 
-  app.on('devices:garage-gate:click', () => garageGate.click());
+    app.on('devices:garage-gate:click', () => garageGate.click());
+  }
 
-  if (app.get('cozytouch_user')) {
+  if (config.cozytouch_user) {
     Cozytouch({
-      user: app.get('config.cozytouch_user'),
-      password: app.get('config.cozytouch_password'),
+      user: config.cozytouch_user,
+      password: config.cozytouch_password,
     }, (state) => {
       console.log(state);
     });
