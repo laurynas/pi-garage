@@ -1,49 +1,45 @@
-var Gpio = require('onoff').Gpio;
-var extend = require('util')._extend;
+const Gpio = require('onoff').Gpio;
+const noop = ()=>{};
 
-function GarageGate(options) {
-  if (!(this instanceof GarageGate)) 
-    return new GarageGate(options);
+class GarageGate {
+  constructor(options) {
+    this.sensor = new Gpio(options.pin, 'in');
+    this.button = new Gpio(options.buttonPin, 'out');
+    this.callback = options.onChange || noop;
+    this.sensorValue = null;
 
-  this.options = extend({
-    onChange: function(status) {},
-    pin: 23,
-    buttonPin: 24,
-    interval: 300
-  }, options || {});
+    this.update();
 
-  this.status = null;
+    setInterval(() => this.update(), 300);
+  }
 
-  this.sensor = new Gpio(this.options.pin, 'in');
-  this.button = new Gpio(this.options.buttonPin, 'out');
+  update() {
+    this.sensor.read(this.handleUpdate.bind(this));
+  }
 
-  var that = this;
+  handleUpdate(err, value) {
+    if (err) {
+      console.log(err);
+      return;
+    }
 
-  setInterval(function() {
-    that.update();
-  }, this.options.interval);
+    if (this.sensorValue == value) {
+      return;
+    }
+
+    this.sensorValue = value;
+    this.callback(value);
+  }
+
+  click() {
+    const button = this.button;
+
+    button.write(1, () => {
+      setTimeout(() => {
+        button.writeSync(0);
+      }, 100);
+    });
+  }
 }
 
-GarageGate.prototype.update = function() {
-  var that = this;
-
-  this.sensor.read(function(err, value) {
-    if (that.status == value)
-      return;
-
-    that.status = value;
-    that.options.onChange(value);
-  });
-};
-
-GarageGate.prototype.click = function() {
-  var button = this.button;
-
-  button.write(1, function() {
-    setTimeout(function() {
-      button.writeSync(0);
-    }, 100);
-  });
-};
-
-module.exports = GarageGate;
+module.exports = (options) => new GarageGate(options);
