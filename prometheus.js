@@ -1,6 +1,6 @@
 const client = require('prom-client');
-const pigarage = require('./prometheus/pigarage');
-const cozytouch = require('./prometheus/cozytouch');
+const pigarage = require('./metrics/pigarage');
+const cozytouch = require('./metrics/cozytouch');
 
 client.collectDefaultMetrics();
 
