@@ -32,7 +32,7 @@ module.exports = (app) => {
       user: config.cozytouch_user,
       password: config.cozytouch_password,
     }, (state) => {
-      console.log(state);
+      app.emit('devices:cozytouch', state);
     });
   }
 }
