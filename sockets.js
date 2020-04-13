@@ -1,3 +1,5 @@
+const lodash = require('lodash');
+
 module.exports = function(app, io) {
   let state = {};
 
@@ -32,12 +34,12 @@ module.exports = function(app, io) {
   });
 };
 
-const findTemperature = (cozytouchResult, oid) => (
-  cozytouchResult
-    .devices
-    .filter(device => device.oid == oid)
-    .flatMap(device => device.states)
+const findTemperature = (cozytouchResult, oid) => {
+  const devices = cozytouchResult.devices.filter(device => device.oid == oid);
+  const states = lodash.flatMap(devices.map(device => device.states));
+
+  return states
     .filter(state => state.name == 'core:TemperatureState')
     .map(state => state.value)
-    .pop()
-);
+    .pop();
+};
