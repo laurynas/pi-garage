@@ -1,7 +1,12 @@
 const GarageTemperatureSensor = require('./devices/temperature_sensor');
+const CPUTemperatureSensor = require('./devices/cpu_temperature_sensor');
 const GarageGate = require('./devices/garage_gate');
 
 module.exports = (app) => {
+  CPUTemperatureSensor(
+    temperature => app.emit('devices:cpu-temperature', temperature)
+  );
+
   GarageTemperatureSensor(
     app.get('garage_temperature_sensor'),
     temperature => app.emit('devices:garage-temperature', temperature),
