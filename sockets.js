@@ -37,8 +37,8 @@ const findTemperature = (cozytouchResult, oid) => (
     .devices
     .filter(device => device.oid == oid)
     .map(device => device.states)
-    .flat()
+    .reduce((arr, device) => [...arr, device.states], [])
     .filter(state => state.name == 'core:TemperatureState')
     .map(state => state.value)
-    .first()
+    .pop()
 );
