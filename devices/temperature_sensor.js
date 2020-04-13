@@ -21,7 +21,7 @@ TemperatureSensor.prototype.update = function() {
 
   sensors.readDevices(function(err, devices) {
     var device = devices[0];
-    value = parseFloat(device.value).toFixed(1);
+    value = parseFloat(parseFloat(device.value).toFixed(1));
 
     if (that.temperature == value)
       return;
@@ -32,4 +32,3 @@ TemperatureSensor.prototype.update = function() {
 };
 
 module.exports = TemperatureSensor;
-
