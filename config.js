@@ -2,4 +2,6 @@ module.exports = function(app) {
   app.set('garage_gate_pin', 23);
   app.set('garage_gate_button_pin', 24);
   app.set('garage_temperature_sensor', '0000054ca394');
+  app.set('cozytouch_user', process.env.COZYTOUCH_USER);
+  app.set('cozytouch_password', process.env.COZYTOUCH_PASSWORD);
 };
