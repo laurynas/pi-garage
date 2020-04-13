@@ -12,9 +12,7 @@ const Cozytouch = (options, callback) => {
   });
 
   const update = () => {
-    api.getSetup().then(result => {
-      callback(result);
-    });
+    api.getSetup().then(setup => callback(setup));
   };
 
   update();

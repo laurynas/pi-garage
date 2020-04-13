@@ -9,13 +9,13 @@ module.exports = (app) => {
   );
 
   GarageTemperatureSensor(
-    app.get('garage_temperature_sensor'),
+    app.get('config.garage_temperature_sensor'),
     temperature => app.emit('devices:garage-temperature', temperature),
   );
 
   const garageGate = GarageGate({
-    pin: app.get('garage_gate_pin'),
-    buttonPin: app.get('garage_gate_button_pin'),
+    pin: app.get('config.garage_gate_pin'),
+    buttonPin: app.get('config.garage_gate_button_pin'),
     onChange: value => app.emit('devices:garage-gate', value),
   });
 
@@ -23,8 +23,8 @@ module.exports = (app) => {
 
   if (app.get('cozytouch_user')) {
     Cozytouch({
-      user: app.get('cozytouch_user'),
-      password: app.get('cozytouch_password'),
+      user: app.get('config.cozytouch_user'),
+      password: app.get('config.cozytouch_password'),
     }, (state) => {
       console.log(state);
     });
