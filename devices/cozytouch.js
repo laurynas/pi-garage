@@ -5,6 +5,10 @@ const Cozytouch = (options, callback) => {
     host: 'ha110-1.overkiz.com',
     user: options.user,
     password: options.password,
+    polling: {
+      always: false,
+      interval: 1000,
+    },
   });
 
   const update = () => {
