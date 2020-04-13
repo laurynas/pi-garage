@@ -1,34 +1,26 @@
-var sensors = require('ds1820-temp');
+const sensors = require('ds1820-temp');
 
-function TemperatureSensor(callback) {
-  if (!(this instanceof TemperatureSensor)) {
-    return new TemperatureSensor(callback);
-  }
+let temperature = null;
 
-  this.temperature = null;
-  this.onChange = callback;
-  this.update();
+const TemperatureSensor = (callback) => {
+  const update = () => {
+    sensors.readDevices((_err, devices) => {
+      const device = devices[0];
 
-  var that = this;
+      console.log(devices);
 
-  setInterval(function() {
-    that.update();
-  }, 60 * 1000);
-};
+      value = parseFloat(parseFloat(device.value).toFixed(1));
 
-TemperatureSensor.prototype.update = function() {
-  var that = this;
+      if (temperature == value)
+        return;
 
-  sensors.readDevices(function(err, devices) {
-    var device = devices[0];
-    value = parseFloat(parseFloat(device.value).toFixed(1));
+      temperature = value;
 
-    if (that.temperature == value)
-      return;
+      callback(temperature);
+    });
+  };
 
-    that.temperature = value;
-    that.onChange(that.temperature);
-  });
+  setInterval(() => update(), 60 * 1000);
 };
 
 module.exports = TemperatureSensor;
