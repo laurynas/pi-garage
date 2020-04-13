@@ -1,5 +1,5 @@
 module.exports = function(app, io) {
-  const state = {};
+  let state = {};
 
   const updateState = (updates) => {
     state = { ...state, ...updates };
