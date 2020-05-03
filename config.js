@@ -6,4 +6,7 @@ module.exports = {
   garage_temperature_sensor: process.env.TEMPERATURE_SENSOR || '0000054ca394',
   cozytouch_user: process.env.COZYTOUCH_USER,
   cozytouch_password: process.env.COZYTOUCH_PASSWORD,
+  mqtt_client_id: process.env.MQTT_CLIENT_ID || 'pi-garage',
+  mqtt_broker: process.env.MQTT_BROKER,
+  mqtt_discovery_prefix: process.env.MQTT_DISCOVERY_PREFIX || 'homeassistant',
 };
