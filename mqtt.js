@@ -67,6 +67,8 @@ module.exports = (app) => {
     device_class: t1.device_class,
     name: t1.name,
     state_topic: t1StateTopic,
+    unit_of_measurement: '°C',
+    value_template: '{{ value | float }}',
   }), {
     retain: true,
   });
