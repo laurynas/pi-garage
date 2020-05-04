@@ -2,10 +2,17 @@ const lodash = require('lodash');
 const config = require('../../config');
 const prefix = config.mqtt_discovery_prefix;
 
-module.exports = (device, state) => {
+const INITIALIZED = {};
+
+module.exports = (client, device, state) => {
   const id = device.oid + '-' + lodash.snakeCase(state.name);
   const topic = prefix + '/sensor/' + id;
   const stateTopic = topic + '/state';
+  const configTopic = topic + '/config';
+
+  client.publish(stateTopic, state.value.toString(), { retain: true });
+
+  if (INITIALIZED[id]) return;
 
   const config = {
     unique_id: id,
@@ -21,10 +28,7 @@ module.exports = (device, state) => {
     },
   }
 
-  return {
-    baseTopic: topic,
-    configTopic: topic + '/config',
-    stateTopic,
-    config,
-  }
+  client.publish(configTopic, JSON.stringify(config), { retain: true });
+
+  INITIALIZED[id] = true;
 }

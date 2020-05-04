@@ -8,13 +8,7 @@ module.exports = (client, app) => {
       device.states.forEach(state => {
         switch (state.name) {
           case 'core:TemperatureState':
-            const sensor = TemperatureSensor(device, state);
-
-            if (!initialized) {
-              client.publish(sensor.configTopic, JSON.stringify(sensor.config), { retain: true });
-            }
-
-            client.publish(sensor.stateTopic, state.value.toString(), { retain: true });
+            TemperatureSensor(client, device, state);
             break;
         }
       });
