@@ -1,3 +1,4 @@
+const os = require('os');
 const mqtt = require('mqtt');
 const config = require('./config');
 
@@ -23,6 +24,11 @@ const gd1StateTopic = gd1BaseTopic + '/state';
 const t1BaseTopic = prefix + '/sensor/' + t1.id;
 const t1ConfigTopic = t1BaseTopic + '/config';
 const t1StateTopic = t1BaseTopic + '/state';
+
+const device = {
+  name: 'pi-garage',
+  connections: [['mac', os.networkInterfaces().eth0[0].mac]],
+};
 
 module.exports = (app) => {
   const client = mqtt.connect(`mqtt://${config.mqtt_broker}`, { 
@@ -55,20 +61,24 @@ module.exports = (app) => {
   });
 
   client.publish(gd1ConfigTopic, JSON.stringify({
+    unique_id: door.id,
     device_class: door.device_class,
     name: door.name,
     command_topic: gd1CommandTopic,
     state_topic: gd1StateTopic,
+    device,
   }), {
     retain: true,
   });
 
   client.publish(t1ConfigTopic, JSON.stringify({
+    unique_id: t1.id,
     device_class: t1.device_class,
     name: t1.name,
     state_topic: t1StateTopic,
     unit_of_measurement: '°C',
     value_template: '{{ value | float }}',
+    device,
   }), {
     retain: true,
   });
