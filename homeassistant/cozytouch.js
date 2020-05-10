@@ -1,4 +1,5 @@
 const TemperatureSensor = require('./cozytouch/temperature_sensor');
+const ElectricEnergyConsumptionSensor = require('./cozytouch/electric_energy_consumption_sensor');
 
 let initialized = false;
 
@@ -10,7 +11,10 @@ module.exports = (client, app) => {
           case 'core:TemperatureState':
             TemperatureSensor(client, device, state);
             break;
-        }
+          case 'core:ElectricEnergyConsumptionState':
+            ElectricEnergyConsumptionSensor(client, device, state);
+            break;
+          }
       });
     });
 
