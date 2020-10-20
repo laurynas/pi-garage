@@ -7,7 +7,7 @@ module.exports = (client, app) => {
 
   app.on('devices:cozytouch', setup => {
     setup.devices.forEach(device => {
-      device.states.forEach(state => {
+      (device.states || []).forEach(state => {
         handleState(device, state);
       });
     });
