@@ -36,7 +36,7 @@ module.exports = function(app, io) {
 
 const findTemperature = (cozytouchResult, oid) => {
   const devices = cozytouchResult.devices.filter(device => device.oid == oid);
-  const states = lodash.flatMap(devices.map(device => device.states));
+  const states = lodash.flatMap(devices.map(device => device.states || []));
 
   return states
     .filter(state => state.name == 'core:TemperatureState')
