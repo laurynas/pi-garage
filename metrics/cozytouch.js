@@ -5,11 +5,17 @@ const PREFIX = 'cozytouch';
 module.exports = (client, app) => {
   const REGISTRY = {}
 
-  app.on('devices:cozytouch', setup => {
-    setup.devices.forEach(device => {
+  app.on('devices:cozytouch', devices => {
+    devices.forEach(device => {
       (device.states || []).forEach(state => {
         handleState(device, state);
       });
+
+      device.sensors.forEach(sensor => {
+        (sensor.states || []).forEach(state => {
+          handleState(sensor, state);
+        });
+      })
     });
   });
 
@@ -19,13 +25,13 @@ module.exports = (client, app) => {
     }
 
     const labels = {
-      name: device.name,
+      name: device.label,
       model: device.model,
       widget: device.widget,
       uiClass: device.uiClass,
       oid: device.oid,
       placeOID: device.placeOID,
-      url: device.URL,
+      url: device.deviceURL,
     }
 
     let value = state.value;

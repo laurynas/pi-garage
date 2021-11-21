@@ -1,22 +1,23 @@
-const { API } = require('overkiz-api');
+const { Client } = require('overkiz-client');
 
 const Cozytouch = (options, callback) => {
-  const api = new API({
-    host: 'ha110-1.overkiz.com',
+  const client = new Client(console, {
+    service: 'cozytouch',
     user: options.user,
     password: options.password,
-    polling: {
-      always: false,
-      interval: 1000,
-    },
+    pollingPeriod: 0,
+    refreshPeriod: 0,
   });
 
-  const update = () => {
-    api.getSetup().then(setup => callback(setup));
+  const update = async () => {
+    await client.refreshAllStates();
+    const devices = await client.getDevices();
+
+    callback(devices);
   };
 
   update();
-  setInterval(() => update(), 60 * 1000);
+  setInterval(() => update(), 5 * 60 * 1000);
 };
 
 module.exports = Cozytouch;

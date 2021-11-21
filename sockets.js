@@ -34,8 +34,10 @@ module.exports = function(app, io) {
   });
 };
 
-const findTemperature = (cozytouchResult, oid) => {
-  const devices = cozytouchResult.devices.filter(device => device.oid == oid);
+const findTemperature = (allDevices, oid) => {
+  const sensors = allDevices.flatMap(device => device.sensors);
+  const devicesAndSensors = allDevices.concat(sensors);
+  const devices = devicesAndSensors.filter(device => device.oid == oid);
   const states = lodash.flatMap(devices.map(device => device.states || []));
 
   return states
