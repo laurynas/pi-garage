@@ -9,15 +9,15 @@ module.exports = function(app, io) {
     io.emit('state', state);
   };
 
+  const updateTemperature = (device, oid, attribute) => {
+    const temperature = findTemperature(device, oid);
+    temperature && updateState({ [attribute]: temperature });
+  }
+
   app.on('devices:garage-temperature', value => updateState({ garageTemperature: value }));
   app.on('devices:garage-gate', value => updateState({ garageGate: value }));
-
-  app.on('devices:cozytouch', result => {
-    updateState({
-      salonTemperature: findTemperature(result, '1268a0bd-70ff-4a91-98a6-2b5a51fb99ba'),
-      outsideTemperature: findTemperature(result, '2b9d7259-8d05-4179-a7ff-aa09a56c31fc'),
-    });
-  });
+  app.on('devices:cozytouch', device => updateTemperature(device, '1268a0bd-70ff-4a91-98a6-2b5a51fb99ba', 'salonTemperature'));
+  app.on('devices:cozytouch', device => updateTemperature(device, '2b9d7259-8d05-4179-a7ff-aa09a56c31fc', 'outsideTemperature'));
 
   io.on('connection', function(socket) {
     console.log('socket connected');
@@ -34,11 +34,10 @@ module.exports = function(app, io) {
   });
 };
 
-const findTemperature = (allDevices, oid) => {
-  const sensors = lodash.flatMap(allDevices.map(device => device.sensors));
-  const devicesAndSensors = allDevices.concat(sensors);
-  const devices = devicesAndSensors.filter(device => device.oid == oid);
-  const states = lodash.flatMap(devices.map(device => device.states || []));
+const findTemperature = (device, oid) => {
+  const deviceAndSensors = [device].concat(device.sensors);
+  const devices = deviceAndSensors.filter(device => device.oid == oid);
+  const states = lodash.flatMap(devices.map(device => device.states));
 
   return states
     .filter(state => state.name == 'core:TemperatureState')

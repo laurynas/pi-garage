@@ -23,7 +23,7 @@ module.exports = (client, device, state) => {
     value_template: '{{ value | int }}',
     device: {
       identifiers: [device.oid],
-      name: device.name,
+      name: device.label,
       model: device.model,
     },
   }

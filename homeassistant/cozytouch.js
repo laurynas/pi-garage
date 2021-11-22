@@ -4,26 +4,15 @@ const ElectricEnergyConsumptionSensor = require('./cozytouch/electric_energy_con
 let initialized = false;
 
 module.exports = (client, app) => {
-  app.on('devices:cozytouch', devices => {
-    devices.forEach(device => {
-      (device.states || []).forEach(state => {
-        switch (state.name) {
-          case 'core:ElectricEnergyConsumptionState':
-            ElectricEnergyConsumptionSensor(client, device, state);
-            break;
-          }
-      });
+  app.on('devices:cozytouch', device => {
+    device.states
+      .filter(state => state.name == 'core:ElectricEnergyConsumptionState')
+      .forEach(state => ElectricEnergyConsumptionSensor(client, device, state));
 
-      device.sensors.forEach(sensor => {
-        (sensor.states || []).forEach(state => {
-          switch (state.name) {
-            case 'core:TemperatureState':
-              TemperatureSensor(client, sensor, state);
-              break;
-            }
-          }
-        );
-      })
+    device.sensors.forEach(sensor => {
+      sensor.states
+        .filter(state => state.name == 'core:TemperatureState')
+        .forEach(state => TemperatureSensor(client, device, state));
     });
 
     initialized = true;

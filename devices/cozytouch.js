@@ -1,23 +1,20 @@
 const { Client } = require('overkiz-client');
 
-const Cozytouch = (options, callback) => {
+const Cozytouch = async (options, callback) => {
   const client = new Client(console, {
     service: 'cozytouch',
     user: options.user,
     password: options.password,
-    pollingPeriod: 0,
-    refreshPeriod: 0,
+    refreshPeriod: 5,
   });
 
-  const update = async () => {
-    await client.refreshAllStates();
-    const devices = await client.getDevices();
+  const devices = await client.getDevices();
 
-    callback(devices);
-  };
+  devices.forEach(device => {
+    device.on('states', (_states) => callback(device));
+  });
 
-  update();
-  setInterval(() => update(), 5 * 60 * 1000);
+  await client.refreshAllStates();
 };
 
 module.exports = Cozytouch;
