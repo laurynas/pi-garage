@@ -32,11 +32,21 @@ module.exports = (client, app) => {
       url: device.deviceURL,
     }
 
-    let value = state.value;
+    let value;
 
-    if (state.type == 3) {
-      labels.value = value;
-      value = 1;
+    switch (state.type) {
+      case 1:
+        value = parseInt(state.value);
+        break;
+
+      case 2:
+        value = parseFloat(state.value);
+        break;
+
+      case 3:
+        labels.value = state.value;
+        value = 1;
+        break;
     }
 
     fetchGauge(state).set(labels, value);
