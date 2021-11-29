@@ -17,7 +17,7 @@ module.exports = (client, device, state) => {
   const config = {
     unique_id: id,
     device_class: 'power',
-    name: device.name + ' ' + state.name,
+    name: device.label + ' ' + state.name,
     state_topic: stateTopic,
     unit_of_measurement: 'W',
     value_template: '{{ value | int }}',
