@@ -9,10 +9,12 @@ module.exports = (client, app) => {
       .filter(state => state.name == 'core:ElectricEnergyConsumptionState')
       .forEach(state => ElectricEnergyConsumptionSensor(client, device, state));
 
-    device.sensors.forEach(sensor => {
+    const deviceAndSensors = [device].concat(device.sensors);
+
+    deviceAndSensors.forEach(sensor => {
       sensor.states
         .filter(state => state.name == 'core:TemperatureState')
-        .forEach(state => TemperatureSensor(client, device, state));
+        .forEach(state => TemperatureSensor(client, sensor, state));
     });
 
     initialized = true;
