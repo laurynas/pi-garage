@@ -1,8 +1,6 @@
 const TemperatureSensor = require('./cozytouch/temperature_sensor');
 const ElectricEnergyConsumptionSensor = require('./cozytouch/electric_energy_consumption_sensor');
 
-let initialized = false;
-
 module.exports = (client, app) => {
   app.on('devices:cozytouch', device => {
     device.states
@@ -16,8 +14,6 @@ module.exports = (client, app) => {
         .filter(state => state.name == 'core:TemperatureState')
         .forEach(state => TemperatureSensor(client, sensor, state));
     });
-
-    initialized = true;
   });
 };
 
