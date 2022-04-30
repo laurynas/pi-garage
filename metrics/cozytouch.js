@@ -50,7 +50,7 @@ module.exports = (client, app) => {
     }
 
     if (isNaN(value)) {
-      console.warn(`Unexpected value ${value}, device: ${device}, state: ${state}`)
+      console.warn(`Unexpected value ${value}, device: ${util.inspect(device)}, state: ${util.inspect(state)}`)
       return;
     }
 
