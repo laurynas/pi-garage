@@ -49,6 +49,11 @@ module.exports = (client, app) => {
         break;
     }
 
+    if (isNaN(value)) {
+      console.warn(`Unexpected value ${value}, device: ${device}, state: ${state}`)
+      return;
+    }
+
     fetchGauge(state).set(labels, value);
   }
 
