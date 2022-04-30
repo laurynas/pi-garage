@@ -5,7 +5,7 @@ const Cozytouch = async (options, callback) => {
     service: 'cozytouch',
     user: options.user,
     password: options.password,
-    refreshPeriod: 60,
+    refreshPeriod: 10,
   });
 
   const devices = await client.getDevices();
