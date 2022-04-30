@@ -18,7 +18,7 @@ module.exports = (client, app) => {
   });
 
   const handleState = (device, state) => {
-    if (state.type > 3) {
+    if (state.type > 3 || !state.value) {
       return;
     }
 
@@ -47,13 +47,6 @@ module.exports = (client, app) => {
         labels.value = state.value;
         value = 1;
         break;
-    }
-
-    if (isNaN(value)) {
-      console.warn(`Unexpected value ${value}`)
-      console.dir(device);
-      console.dir(state);
-      return;
     }
 
     fetchGauge(state).set(labels, value);
